@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Gestión – Inicio</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#1D9E75;--teal-dk:#0F6E56;--teal-lt:#E1F5EE;--teal-md:#5DCAA5;
+  --amber:#EF9F27;--coral:#D85A30;--blue:#185FA5;
+  --text:#1a1a1a;--muted:#6b7280;--bg:#f4f6f5;--white:#ffffff;--border:#e2e8e5;
+  --radius:12px;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* NAV */
+nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;height:64px;gap:2rem;position:sticky;top:0;z-index:200}
+.nav-logo{font-size:18px;font-weight:800;color:var(--teal);white-space:nowrap}
+.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:4px;flex:1}
+.nav-links a{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--muted);text-decoration:none;cursor:pointer;transition:background .15s,color .15s}
+.nav-links a:hover,.nav-links a.active{background:var(--teal-lt);color:var(--teal-dk)}
+.nav-links a svg{width:15px;height:15px;flex-shrink:0}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--teal);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.nav-user{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;cursor:pointer;padding:5px 12px;border-radius:8px;transition:background .15s}
+.nav-user:hover{background:var(--teal-lt)}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--teal-dk) 0%,var(--teal) 55%,var(--teal-md) 100%);padding:2.5rem 2rem 5rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-60px;right:-80px;width:360px;height:360px;border-radius:50%;background:rgba(255,255,255,.06)}
+.hero::after{content:'';position:absolute;bottom:-80px;left:5%;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.04)}
+.hero-inner{max-width:960px;margin:0 auto;position:relative;z-index:1}
+.hero h1{font-size:1.9rem;font-weight:800;color:#fff;margin-bottom:.4rem}
+.hero p{color:rgba(255,255,255,.8);font-size:14px;margin-bottom:1.5rem}
+.search-tabs{display:flex;gap:4px;margin-bottom:0}
+.stab{padding:8px 18px;border-radius:8px 8px 0 0;font-size:13px;font-weight:600;cursor:pointer;border:none;background:rgba(255,255,255,.18);color:rgba(255,255,255,.85);transition:background .15s,color .15s;display:flex;align-items:center;gap:6px;font-family:inherit}
+.stab.active{background:var(--white);color:var(--teal-dk)}
+.stab svg{width:14px;height:14px}
+.search-box{background:var(--white);border-radius:0 16px 16px 16px;padding:1.25rem 1.5rem;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.field{flex:1;min-width:130px;display:flex;flex-direction:column;gap:5px}
+.field label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.field input,.field select{border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;transition:border-color .15s}
+.field input:focus,.field select:focus{border-color:var(--teal);background:#fff}
+.btn-buscar{background:var(--teal);color:#fff;border:none;border-radius:10px;padding:10px 24px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:7px;white-space:nowrap;transition:background .15s}
+.btn-buscar:hover{background:var(--teal-dk)}
+.btn-buscar svg{width:16px;height:16px}
+.results-box{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);padding:1rem 1.25rem;margin-top:1rem;display:none}
+.results-box.show{display:block}
+.results-title{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.5px}
+.result-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:1rem;flex-wrap:wrap}
+.result-item:last-child{border-bottom:none;padding-bottom:0}
+.ri-info{display:flex;align-items:center;gap:12px}
+.ri-ic{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ri-ic.v{background:var(--teal-lt)}.ri-ic.h{background:#FFF0E6}.ri-ic.p{background:#E6F1FB}
+.ri-ic svg{width:18px;height:18px}
+.ri-name{font-size:14px;font-weight:700}
+.ri-sub{font-size:12px;color:var(--muted)}
+.ri-price{font-size:16px;font-weight:800;color:var(--teal-dk)}
+.ri-price small{font-size:11px;font-weight:400;color:var(--muted);display:block;text-align:right}
+
+/* MAIN */
+main{max-width:1060px;margin:0 auto;padding:2rem 1.5rem 6rem}
+section{margin-bottom:2.5rem}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.1rem}
+.sec-head h2{font-size:17px;font-weight:700}
+.sec-head a{font-size:13px;color:var(--teal);text-decoration:none;font-weight:600;cursor:pointer}
+
+/* PROMO */
+.promo-banner{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);padding:1.2rem 1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.promo-left{display:flex;align-items:center;gap:1.1rem}
+.promo-num{font-size:3.2rem;font-weight:800;color:var(--teal);line-height:1}
+.promo-txt h3{font-size:1.2rem;font-weight:800;line-height:1.1}
+.promo-txt p{font-size:12px;color:var(--muted);margin-top:3px}
+.badge-pill{background:var(--teal-lt);color:var(--teal-dk);font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px}
+.airline-pills{display:flex;gap:8px;flex-wrap:wrap}
+.ap{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:4px 13px;font-size:12px;font-weight:600}
+
+/* DESTINOS */
+.dest-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem}
+.dest-card{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:transform .18s}
+.dest-card:hover{transform:translateY(-3px)}
+.dest-img{height:120px;display:flex;align-items:flex-end;padding:10px}
+.dest-bari{background:linear-gradient(160deg,#0F6E56 20%,#5DCAA5 100%)}
+.dest-mza{background:linear-gradient(160deg,#854F0B 20%,#EF9F27 100%)}
+.dest-salta{background:linear-gradient(160deg,#993C1D 20%,#F09975 100%)}
+.dest-ush{background:linear-gradient(160deg,#0C447C 20%,#85B7EB 100%)}
+.dest-cba{background:linear-gradient(160deg,#3B6D11 20%,#97C459 100%)}
+.dest-mdp{background:linear-gradient(160deg,#534AB7 20%,#AFA9EC 100%)}
+.dest-tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.25);color:#fff;backdrop-filter:blur(4px)}
+.dest-info{padding:12px}
+.dest-info h3{font-size:14px;font-weight:700;margin-bottom:3px}
+.dest-info .dp{font-size:12px;color:var(--muted)}
+.dest-info .dp strong{font-size:15px;font-weight:800;color:var(--teal-dk)}
+.dest-btn{width:100%;background:var(--teal-lt);color:var(--teal-dk);border:none;border-radius:8px;padding:7px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:8px;transition:background .15s}
+.dest-btn:hover{background:var(--teal-md);color:#fff}
+
+/* PRODUCTOS */
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.prod-card{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);padding:1.1rem;display:flex;flex-direction:column;gap:10px;transition:transform .18s}
+.prod-card:hover{transform:translateY(-2px)}
+.prod-head{display:flex;align-items:center;gap:10px}
+.prod-ic{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.prod-ic.v{background:var(--teal-lt)}.prod-ic.h{background:#FFF0E6}.prod-ic.p{background:#E6F1FB}
+.prod-ic svg{width:18px;height:18px}
+.prod-head h3{font-size:14px;font-weight:700}
+.prod-head p{font-size:11px;color:var(--muted)}
+.prod-mid{display:flex;justify-content:space-between;align-items:center}
+.prod-route{font-size:12px;color:var(--muted);line-height:1.5}
+.prod-route strong{display:block;font-size:13px;color:var(--text);font-weight:700}
+.chip{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px}
+.chip.g{background:var(--teal-lt);color:var(--teal-dk)}
+.chip.a{background:#FFF0E6;color:#854F0B}
+.chip.b{background:#E6F1FB;color:#0C447C}
+.prod-bot{display:flex;justify-content:space-between;align-items:center}
+.prod-price{font-size:17px;font-weight:800;color:var(--teal-dk)}
+.prod-price small{font-size:11px;font-weight:400;color:var(--muted);display:block}
+.btn-add{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;transition:background .15s}
+.btn-add:hover:not(:disabled){background:var(--teal-dk)}
+.btn-add:disabled{background:#e2e8e5;color:var(--muted);cursor:default}
+
+/* PEDIDOS */
+.pedidos-list{display:flex;flex-direction:column;gap:8px}
+.pedido-item{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.pedido-num{font-size:12px;font-weight:700;color:var(--muted)}
+.pedido-name{font-size:14px;font-weight:700}
+.pedido-dest{font-size:12px;color:var(--muted)}
+.status-pill{font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px}
+.sp{background:#FFF0E6;color:#854F0B}
+.sc{background:var(--teal-lt);color:var(--teal-dk)}
+.pedido-price{font-size:16px;font-weight:800;color:var(--teal-dk)}
+.btn-mod{background:none;border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s}
+.btn-mod:hover{background:var(--bg)}
+.btn-del{background:none;border:1px solid #F7C1C1;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;color:#A32D2D;transition:background .15s}
+.btn-del:hover{background:#FCEBEB}
+.empty-msg{text-align:center;padding:2rem;color:var(--muted);font-size:14px;background:var(--white);border-radius:var(--radius);border:1px solid var(--border)}
+
+/* CASHBACK */
+.cashback{background:var(--teal);border-radius:var(--radius);padding:1.4rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.cashback h3{font-size:1.15rem;font-weight:800;color:#fff}
+.cashback p{font-size:12px;color:rgba(255,255,255,.8);margin-top:4px}
+.btn-white{background:#fff;color:var(--teal-dk);border:none;border-radius:8px;padding:9px 22px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;transition:opacity .15s}
+.btn-white:hover{opacity:.88}
+
+/* CARRITO */
+.cart-btn{position:fixed;bottom:28px;right:28px;background:var(--teal);color:#fff;border-radius:50px;padding:12px 20px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(15,110,86,.4);cursor:pointer;border:none;font-family:inherit;transition:background .15s,transform .2s;z-index:300}
+.cart-btn:hover{background:var(--teal-dk)}
+.cart-btn.bump{transform:scale(1.15)}
+.cart-btn svg{width:17px;height:17px}
+.cart-count{background:var(--amber);color:#fff;font-size:11px;font-weight:700;min-width:20px;height:20px;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.cart-panel{position:fixed;right:0;top:0;bottom:0;width:360px;background:var(--white);box-shadow:-4px 0 30px rgba(0,0,0,.12);z-index:400;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .3s ease}
+.cart-panel.open{transform:translateX(0)}
+.cart-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.cart-header h2{font-size:16px;font-weight:700}
+.btn-close{background:none;border:none;cursor:pointer;padding:4px;border-radius:6px;color:var(--muted);display:flex;transition:background .15s}
+.btn-close:hover{background:var(--bg)}
+.btn-close svg{width:20px;height:20px}
+.cart-items{flex:1;overflow-y:auto;padding:1rem 1.5rem}
+.cart-empty{text-align:center;padding:3rem 1rem;color:var(--muted);font-size:14px}
+.cart-item{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid var(--border)}
+.cart-item:last-child{border-bottom:none}
+.ci-ic{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ci-ic.v{background:var(--teal-lt)}.ci-ic.h{background:#FFF0E6}.ci-ic.p{background:#E6F1FB}
+.ci-ic svg{width:17px;height:17px}
+.ci-info{flex:1}
+.ci-name{font-size:13px;font-weight:700}
+.ci-sub{font-size:11px;color:var(--muted)}
+.ci-price{font-size:14px;font-weight:800;color:var(--teal-dk);margin-top:2px}
+.btn-rm{background:none;border:none;cursor:pointer;color:var(--muted);padding:2px;border-radius:4px;transition:color .15s;flex-shrink:0}
+.btn-rm:hover{color:#A32D2D}
+.btn-rm svg{width:15px;height:15px}
+.cart-footer{padding:1.25rem 1.5rem;border-top:1px solid var(--border)}
+.cart-total{display:flex;justify-content:space-between;margin-bottom:1rem;font-size:15px;font-weight:700}
+.cart-total span:last-child{color:var(--teal-dk);font-size:18px;font-weight:800}
+.btn-comprar{width:100%;background:var(--teal);color:#fff;border:none;border-radius:10px;padding:12px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;transition:background .15s}
+.btn-comprar:hover:not(:disabled){background:var(--teal-dk)}
+.btn-comprar:disabled{background:var(--border);color:var(--muted);cursor:default}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:350;display:none}
+.overlay.show{display:block}
+
+/* TOAST */
+.toast{position:fixed;bottom:100px;right:28px;background:var(--teal-dk);color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;z-index:500;opacity:0;transform:translateY(10px);transition:opacity .3s,transform .3s;pointer-events:none;max-width:280px}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:600;display:none;align-items:center;justify-content:center}
+.modal-bg.show{display:flex}
+.modal{background:var(--white);border-radius:16px;padding:1.5rem;width:min(420px,90vw)}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:1rem}
+.modal label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);display:block;margin-bottom:4px}
+.modal input{width:100%;border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:13px;font-family:inherit;margin-bottom:.75rem;outline:none;color:var(--text)}
+.modal input:focus{border-color:var(--teal)}
+.modal-actions{display:flex;gap:8px;margin-top:.5rem}
+.btn-cancel{flex:1;background:none;border:1px solid var(--border);border-radius:8px;padding:9px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer}
+.btn-save{flex:2;background:var(--teal);color:#fff;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Sistema<span>deGestión</span></div>
+  <div class="nav-links">
+    <a class="active" onclick="scrollToTop()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Inicio
+    </a>
+    <a onclick="ir('sec-vuelos')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>Vuelos
+    </a>
+    <a onclick="ir('sec-hoteles')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Hoteles
+    </a>
+    <a onclick="ir('sec-paquetes')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 7V5a2 2 0 0 0-4 0v2"/></svg>Paquetes
+    </a>
+    <a onclick="ir('sec-pedidos')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Mis Pedidos
+    </a>
+  </div>
+  <div class="nav-user">
+    <div class="avatar">JR</div>
+    <span>Juan R.</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <h1>¿A dónde querés viajar?</h1>
+    <p>Encontrá los mejores vuelos, hoteles y paquetes para tu próxima aventura</p>
+    <div class="search-tabs">
+      <button class="stab active" onclick="setTab(this,'vuelo')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>Vuelos
+      </button>
+      <button class="stab" onclick="setTab(this,'hotel')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Hoteles
+      </button>
+      <button class="stab" onclick="setTab(this,'paquete')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 7V5a2 2 0 0 0-4 0v2"/></svg>Paquetes
+      </button>
+    </div>
+    <div class="search-box">
+      <div class="field" id="f-origen">
+        <label>Origen</label>
+        <input id="inp-origen" type="text" placeholder="Buenos Aires (BUE)">
+      </div>
+      <div class="field">
+        <label>Destino</label>
+        <input id="inp-destino" type="text" placeholder="¿A dónde vas?">
+      </div>
+      <div class="field" style="max-width:140px">
+        <label id="lbl-f1">Fecha de ida</label>
+        <input id="inp-f1" type="date">
+      </div>
+      <div class="field" style="max-width:140px">
+        <label id="lbl-f2">Fecha de vuelta</label>
+        <input id="inp-f2" type="date">
+      </div>
+      <div class="field" style="max-width:120px">
+        <label id="lbl-pax">Pasajeros</label>
+        <select id="inp-pax">
+          <option>1 adulto</option><option>2 adultos</option><option>3 adultos</option><option>Familia</option>
+        </select>
+      </div>
+      <button class="btn-buscar" onclick="buscar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Buscar
+      </button>
+    </div>
+    <div class="results-box" id="results-box">
+      <div class="results-title" id="results-title"></div>
+      <div id="results-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+<!-- PROMO -->
+<section>
+  <div class="promo-banner">
+    <div class="promo-left">
+      <div class="promo-num">12</div>
+      <div class="promo-txt">
+        <h3>Cuotas<br>Cero Interés</h3>
+        <p>En vuelos nacionales con NX Crédito</p>
+      </div>
+      <span class="badge-pill">NX Crédito</span>
+    </div>
+    <div class="airline-pills">
+      <span class="ap">Aerolíneas Argentinas</span>
+      <span class="ap">JetSMART</span>
+      <span class="ap">Flybondi</span>
+    </div>
+  </div>
+</section>
+
+<!-- DESTINOS -->
+<section>
+  <div class="sec-head">
+    <h2>Destinos populares</h2>
+    <a onclick="ir('sec-vuelos')">Ver todos →</a>
+  </div>
+  <div class="dest-grid">
+    <div class="dest-card">
+      <div class="dest-img dest-bari"><span class="dest-tag">Patagonia</span></div>
+      <div class="dest-info">
+        <h3>Bariloche</h3><p class="dp">Desde <strong>$185.000</strong></p>
+        <button class="dest-btn" onclick="quickAdd('AR2451')">+ Agregar vuelo</button>
+      </div>
+    </div>
+    <div class="dest-card">
+      <div class="dest-img dest-mza"><span class="dest-tag">Cuyo</span></div>
+      <div class="dest-info">
+        <h3>Mendoza</h3><p class="dp">Desde <strong>$142.000</strong></p>
+        <button class="dest-btn" onclick="quickAdd('AR7823')">+ Agregar vuelo</button>
+      </div>
+    </div>
+    <div class="dest-card">
+      <div class="dest-img dest-salta"><span class="dest-tag">Norte</span></div>
+      <div class="dest-info">
+        <h3>Salta</h3><p class="dp">Desde <strong>$128.000</strong></p>
+        <button class="dest-btn" onclick="quickAdd('AR3456')">+ Agregar vuelo</button>
+      </div>
+    </div>
+    <div class="dest-card">
+      <div class="dest-img dest-ush"><span class="dest-tag">Tierra del Fuego</span></div>
+      <div class="dest-info">
+        <h3>Ushuaia</h3><p class="dp">Desde <strong>$210.000</strong></p>
+        <button class="dest-btn" onclick="quickAdd('AR5690')">+ Agregar vuelo</button>
+      </div>
+    </div>
+    <div class="dest-card">
+      <div class="dest-img dest-cba"><span class="dest-tag">Centro</span></div>
+      <div class="dest-info">
+        <h3>Córdoba</h3><p class="dp">Desde <strong>$95.000</strong></p>
+        <button class="dest-btn" onclick="quickAdd('FO1120')">+ Agregar vuelo</button>
+      </div>
+    </div>
+    <div class="dest-card">
+      <div class="dest-img dest-mdp"><span class="dest-tag">Costa</span></div>
+      <div class="dest-info">
+        <h3>Mar del Plata</h3><p class="dp">Desde <strong>$78.000</strong></p>
+        <button class="dest-btn" onclick="quickAdd('JS2030')">+ Agregar vuelo</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VUELOS -->
+<section id="sec-vuelos">
+  <div class="sec-head"><h2>✈️ Vuelos disponibles</h2></div>
+  <div class="prod-grid" id="lista-vuelos"></div>
+</section>
+
+<!-- HOTELES -->
+<section id="sec-hoteles">
+  <div class="sec-head"><h2>🏨 Hoteles disponibles</h2></div>
+  <div class="prod-grid" id="lista-hoteles"></div>
+</section>
+
+<!-- PAQUETES -->
+<section id="sec-paquetes">
+  <div class="sec-head"><h2>📦 Paquetes todo incluido</h2></div>
+  <div class="prod-grid" id="lista-paquetes"></div>
+</section>
+
+<!-- CASHBACK -->
+<section>
+  <div class="cashback">
+    <div>
+      <h3>Activá tu plan y ahorrá hasta 30% OFF</h3>
+      <p>Reintegros de hasta $50.000 en cada compra con Plan Turbo o Plan Épico</p>
+    </div>
+    <button class="btn-white">Ver planes disponibles</button>
+  </div>
+</section>
+
+<!-- PEDIDOS -->
+<section id="sec-pedidos">
+  <div class="sec-head"><h2>📋 Mis pedidos pendientes</h2></div>
+  <div class="pedidos-list" id="pedidos-list">
+    <div class="empty-msg">No tenés pedidos pendientes aún. ¡Empezá a armar tu viaje!</div>
+  </div>
+</section>
+
+</main>
+
+<!-- CARRITO FLOTANTE -->
+<button class="cart-btn" id="cart-fab" onclick="toggleCart()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+  Carrito
+  <div class="cart-count" id="cart-count">0</div>
+</button>
+
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-header">
+    <h2>🛒 Mi carrito</h2>
+    <button class="btn-close" onclick="toggleCart()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <div class="cart-empty">Tu carrito está vacío. Agregá productos para comenzar.</div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total estimado</span><span id="cart-total-val">$0</span></div>
+    <button class="btn-comprar" id="btn-comprar" onclick="confirmarCompra()" disabled>Confirmar pedido</button>
+  </div>
+</div>
+
+<!-- MODAL EDITAR -->
+<div class="modal-bg" id="modal-pedido">
+  <div class="modal">
+    <h3>Modificar pedido</h3>
+    <label>Nombre / descripción</label>
+    <input id="mod-name" type="text">
+    <label>Precio total (ARS)</label>
+    <input id="mod-price" type="number">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-save" onclick="saveModal()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATOS ──
+const DB = {
+  vuelos: [
+    {id:'AR2451',name:'AR2451',sub:'Aerolíneas Argentinas',route:'BUE → BRC',dest:'Bariloche, Río Negro',price:185000,tipo:'vuelo',chip:'Disponible',chipC:'g'},
+    {id:'AR7823',name:'AR7823',sub:'JetSMART',route:'BUE → MDZ',dest:'Mendoza',price:142000,tipo:'vuelo',chip:'Disponible',chipC:'g'},
+    {id:'AR3456',name:'AR3456',sub:'Flybondi',route:'BUE → SLA',dest:'Salta',price:128000,tipo:'vuelo',chip:'Últimos lugares',chipC:'a'},
+    {id:'AR5690',name:'AR5690',sub:'Aerolíneas Argentinas',route:'BUE → USH',dest:'Ushuaia, Tierra del Fuego',price:210000,tipo:'vuelo',chip:'Disponible',chipC:'g'},
+    {id:'FO1120',name:'FO1120',sub:'Flybondi',route:'BUE → COR',dest:'Córdoba',price:95000,tipo:'vuelo',chip:'Promo',chipC:'b'},
+    {id:'JS2030',name:'JS2030',sub:'JetSMART',route:'BUE → MDP',dest:'Mar del Plata',price:78000,tipo:'vuelo',chip:'Disponible',chipC:'g'},
+  ],
+  hoteles: [
+    {id:'HTL001',name:'Hotel Llao Llao',sub:'5 estrellas – Bariloche',route:'Bariloche Centro',dest:'Hab. doble · desayuno incluido',price:320000,tipo:'hotel',chip:'2 noches mín.',chipC:'a'},
+    {id:'HTL002',name:'Hotel Intercontinental',sub:'4 estrellas – Mendoza',route:'Mendoza Ciudad',dest:'Suite ejecutiva · media pensión',price:198000,tipo:'hotel',chip:'Disponible',chipC:'g'},
+    {id:'HTL003',name:'Hotel Salta',sub:'4 estrellas – Salta',route:'Salta Centro',dest:'Hab. estándar · desayuno',price:145000,tipo:'hotel',chip:'Última hab.',chipC:'a'},
+    {id:'HTL004',name:'Los Cauquenes Resort',sub:'5 estrellas – Ushuaia',route:'Ushuaia',dest:'Suite premium · all inclusive',price:480000,tipo:'hotel',chip:'Promo',chipC:'b'},
+  ],
+  paquetes: [
+    {id:'PKG001',name:'Patagonia Completa',sub:'7 días',route:'Bariloche + Ushuaia',dest:'Vuelo + Hotel + Traslados',price:890000,tipo:'paquete',chip:'Más vendido',chipC:'g'},
+    {id:'PKG002',name:'Norte Argentino',sub:'5 días',route:'Salta + Jujuy',dest:'Vuelo + Hotel + Excursiones',price:650000,tipo:'paquete',chip:'Cuotas s/int.',chipC:'b'},
+    {id:'PKG003',name:'Mendoza Wine Tour',sub:'4 días',route:'Mendoza',dest:'Vuelo + Hotel + Bodegas',price:520000,tipo:'paquete',chip:'Promo',chipC:'a'},
+    {id:'PKG004',name:'Escapada Costera',sub:'3 días',route:'Mar del Plata',dest:'Vuelo + Hotel + Spa',price:310000,tipo:'paquete',chip:'Fin de semana',chipC:'g'},
+  ]
+};
+const TODO = [...DB.vuelos,...DB.hoteles,...DB.paquetes];
+
+// ── STATE ──
+let cart = [];
+let pedidos = [];
+let pedidoN = 1000;
+let currentTab = 'vuelo';
+let editId = null;
+
+// ── ICONS ──
+const IC = {
+  vuelo:`<svg viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>`,
+  hotel:`<svg viewBox="0 0 24 24" fill="none" stroke="#D85A30" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>`,
+  paquete:`<svg viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 7V5a2 2 0 0 0-4 0v2"/></svg>`
+};
+const CLS = {vuelo:'v',hotel:'h',paquete:'p'};
+
+// ── RENDER LISTA ──
+function renderLista(lista, cid) {
+  document.getElementById(cid).innerHTML = lista.map(p => `
+    <div class="prod-card">
+      <div class="prod-head">
+        <div class="prod-ic ${CLS[p.tipo]}">${IC[p.tipo]}</div>
+        <div><h3>${p.name}</h3><p>${p.sub}</p></div>
+      </div>
+      <div class="prod-mid">
+        <div class="prod-route"><strong>${p.route}</strong>${p.dest}</div>
+        <span class="chip ${p.chipC}">${p.chip}</span>
+      </div>
+      <div class="prod-bot">
+        <div class="prod-price">$${p.price.toLocaleString('es-AR')}<small>por persona / noche</small></div>
+        <button class="btn-add" id="badd-${p.id}" onclick="addToCart('${p.id}')">+ Agregar</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── TABS ──
+function setTab(el, tab) {
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  currentTab = tab;
+  document.getElementById('results-box').classList.remove('show');
+  const fo = document.getElementById('f-origen');
+  if (tab==='hotel') {
+    fo.style.display='none';
+    document.getElementById('lbl-f1').textContent='Entrada';
+    document.getElementById('lbl-f2').textContent='Salida';
+    document.getElementById('lbl-pax').textContent='Huéspedes';
+    document.getElementById('inp-pax').innerHTML='<option>1 huésped</option><option>2 huéspedes</option><option>3 huéspedes</option>';
+  } else {
+    fo.style.display='';
+    document.getElementById('lbl-f1').textContent='Fecha de ida';
+    document.getElementById('lbl-f2').textContent='Fecha de vuelta';
+    document.getElementById('lbl-pax').textContent='Pasajeros';
+    document.getElementById('inp-pax').innerHTML='<option>1 adulto</option><option>2 adultos</option><option>3 adultos</option><option>Familia</option>';
+  }
+}
+
+// ── BUSCAR ──
+function buscar() {
+  const dest = document.getElementById('inp-destino').value.trim().toLowerCase();
+  const base = currentTab==='vuelo'?DB.vuelos:currentTab==='hotel'?DB.hoteles:DB.paquetes;
+  const res = dest ? base.filter(p=>[p.route,p.dest,p.name,p.sub].some(s=>s.toLowerCase().includes(dest))) : base;
+  const label = {vuelo:'Vuelos',hotel:'Hoteles',paquete:'Paquetes'};
+  document.getElementById('results-title').textContent =
+    `${res.length} ${label[currentTab]} encontrado${res.length!==1?'s':''}${dest?' para "'+dest+'"':''}`;
+  document.getElementById('results-list').innerHTML = res.length
+    ? res.map(p=>`
+      <div class="result-item">
+        <div class="ri-info">
+          <div class="ri-ic ${CLS[p.tipo]}">${IC[p.tipo]}</div>
+          <div><div class="ri-name">${p.name} – ${p.route}</div><div class="ri-sub">${p.dest} · ${p.sub}</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="ri-price">$${p.price.toLocaleString('es-AR')}<small>por persona</small></div>
+          <button class="btn-add" id="rsrch-${p.id}" onclick="addToCart('${p.id}')">+ Agregar</button>
+        </div>
+      </div>`).join('')
+    : '<div style="padding:1rem;color:var(--muted);font-size:14px">No se encontraron resultados para ese destino.</div>';
+  document.getElementById('results-box').classList.add('show');
+  setTimeout(()=>document.getElementById('results-box').scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+}
+
+// ── CART ──
+function addToCart(id) {
+  if (cart.find(c=>c.id===id)) { showToast('Ya está en tu carrito'); return; }
+  const prod = TODO.find(p=>p.id===id);
+  if (!prod) return;
+  cart.push({...prod, uid: Date.now()});
+  renderCart();
+  bumpFab();
+  showToast('✓ ' + prod.name + ' agregado');
+  markBtn(id, true);
+}
+
+function removeFromCart(uid) {
+  const item = cart.find(c=>c.uid===uid);
+  cart = cart.filter(c=>c.uid!==uid);
+  renderCart();
+  if (item) markBtn(item.id, false);
+}
+
+function markBtn(id, added) {
+  [`badd-${id}`,`rsrch-${id}`].forEach(bid=>{
+    const b = document.getElementById(bid);
+    if (!b) return;
+    b.textContent = added ? '✓ Agregado' : '+ Agregar';
+    b.disabled = added;
+  });
+}
+
+function renderCart() {
+  const n = cart.length;
+  document.getElementById('cart-count').textContent = n;
+  const total = cart.reduce((s,i)=>s+i.price,0);
+  document.getElementById('cart-total-val').textContent = '$'+total.toLocaleString('es-AR');
+  document.getElementById('btn-comprar').disabled = n===0;
+  const el = document.getElementById('cart-items');
+  if (!n) { el.innerHTML='<div class="cart-empty">Tu carrito está vacío. Agregá productos para comenzar.</div>'; return; }
+  el.innerHTML = cart.map(i=>`
+    <div class="cart-item">
+      <div class="ci-ic ${CLS[i.tipo]}">${IC[i.tipo]}</div>
+      <div class="ci-info">
+        <div class="ci-name">${i.name}</div>
+        <div class="ci-sub">${i.sub}</div>
+        <div class="ci-price">$${i.price.toLocaleString('es-AR')}</div>
+      </div>
+      <button class="btn-rm" onclick="removeFromCart(${i.uid})" title="Quitar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+      </button>
+    </div>`).join('');
+}
+
+function toggleCart() {
+  document.getElementById('cart-panel').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+
+function bumpFab() {
+  const f = document.getElementById('cart-fab');
+  f.classList.add('bump');
+  setTimeout(()=>f.classList.remove('bump'),220);
+}
+
+// ── CONFIRMAR ──
+function confirmarCompra() {
+  if (!cart.length) return;
+  const num = 'PED-'+(++pedidoN);
+  const total = cart.reduce((s,i)=>s+i.price,0);
+  pedidos.push({id:num, items:[...cart], total, fecha:new Date().toLocaleDateString('es-AR'), status:'pendiente'});
+  cart.forEach(i=>markBtn(i.id,false));
+  cart=[];
+  renderCart();
+  toggleCart();
+  renderPedidos();
+  showToast('🎉 Pedido '+num+' registrado con éxito');
+  setTimeout(()=>ir('sec-pedidos'),600);
+}
+
+// ── PEDIDOS ──
+function renderPedidos() {
+  const el = document.getElementById('pedidos-list');
+  if (!pedidos.length) {
+    el.innerHTML='<div class="empty-msg">No tenés pedidos pendientes aún. ¡Empezá a armar tu viaje!</div>';
+    return;
+  }
+  el.innerHTML = pedidos.map(p=>`
+    <div class="pedido-item">
+      <div>
+        <div class="pedido-num">${p.id} &nbsp;·&nbsp; ${p.fecha}</div>
+        <div class="pedido-name">${p.items.map(i=>i.name).join(' + ')}</div>
+        <div class="pedido-dest">${p.items.map(i=>i.route||i.sub).join(' · ')}</div>
+      </div>
+      <span class="status-pill ${p.status==='pendiente'?'sp':'sc'}">${p.status==='pendiente'?'Pendiente':'Confirmado'}</span>
+      <div class="pedido-price">$${p.total.toLocaleString('es-AR')}</div>
+      <div style="display:flex;gap:6px">
+        <button class="btn-mod" onclick="openModal('${p.id}')">Modificar</button>
+        <button class="btn-del" onclick="eliminarPedido('${p.id}')">Eliminar</button>
+      </div>
+    </div>`).join('');
+}
+
+function eliminarPedido(id) {
+  pedidos = pedidos.filter(p=>p.id!==id);
+  renderPedidos();
+  showToast('Pedido eliminado');
+}
+
+function openModal(id) {
+  const p = pedidos.find(x=>x.id===id);
+  if (!p) return;
+  editId = id;
+  document.getElementById('mod-name').value = p.items.map(i=>i.name).join(' + ');
+  document.getElementById('mod-price').value = p.total;
+  document.getElementById('modal-pedido').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modal-pedido').classList.remove('show');
+  editId=null;
+}
+function saveModal() {
+  const p = pedidos.find(x=>x.id===editId);
+  if (!p) return;
+  const nn = document.getElementById('mod-name').value.trim();
+  const np = parseInt(document.getElementById('mod-price').value)||p.total;
+  if (nn && p.items[0]) p.items[0].name=nn;
+  p.total=np;
+  closeModal();
+  renderPedidos();
+  showToast('Pedido actualizado');
+}
+
+// ── UTILS ──
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>t.classList.remove('show'),2800);
+}
+function ir(id) {
+  const el=document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
+
+function quickAdd(id) { addToCart(id); }
+
+// ── INIT ──
+renderLista(DB.vuelos,'lista-vuelos');
+renderLista(DB.hoteles,'lista-hoteles');
+renderLista(DB.paquetes,'lista-paquetes');
+renderPedidos();
+</script>
+</body>
+</html>
